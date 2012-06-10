@@ -227,12 +227,16 @@ BCSocket = (url, options) ->
   @['sendMap'] = (map) ->
     # This is the raw way to send messages. This will die if the session isn't connected.
     throw new Error 'Cannot send to a closed connection' if self.readyState in [BCSocket.CLOSING, BCSocket.CLOSED]
+    session.setExtraHeaders self.extraHeaders
     session.sendMap map
 
   # This sends a map of {JSON:"..."}. It is interpretted as a native message by the server.
   @['send'] = (message) ->
     @['sendMap'] 'JSON': goog.json.serialize message
   
+  @['setExtraHeaders'] = (headers) ->
+    self.extraHeaders = headers
+
   # Websocket connections are automatically opened.
   reconnect()
 
